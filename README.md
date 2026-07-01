@@ -1,50 +1,117 @@
-# Welcome to your Expo app 👋
+# Weather App Native
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Application mobile développée avec **React Native** et **Expo** permettant de consulter la météo en temps réel grâce à **OpenWeather**. L'application intègre une authentification avec **Firebase Authentication**, un stockage local avec **SQLite** et une validation des formulaires via **Joi**.
 
-## Get started
+## Fonctionnalités
 
-1. Install dependencies
+- Authentification avec Firebase (inscription, connexion, déconnexion, réinitialisation du mot de passe)
+- Consultation de la météo :
+  - recherche par ville ;
+  - géolocalisation de l'utilisateur ;
+  - température, ressenti, humidité, vent, visibilité, lever et coucher du soleil.
+- Stockage local avec SQLite :
+  - historique des recherches ;
+  - villes favorites.
+- Validation des formulaires avec Joi.
+- Mode sombre et navigation avec React Navigation.
 
-   ```bash
-   npm install
-   ```
+## Stack technique
 
-2. Start the app
+| Domaine | Technologie |
+|----------|-------------|
+| Framework | React Native + Expo |
+| Navigation | React Navigation (Native Stack) |
+| Authentification | Firebase Authentication |
+| API météo | OpenWeather API (Current Weather Data v2.5) |
+| Base locale | SQLite (`expo-sqlite`) |
+| Validation | Joi |
+| Géolocalisation | Expo Location |
 
-   ```bash
-   npx expo start
-   ```
+## Installation
 
-In the output, you'll find options to open the app in a
+### Prérequis
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+- Node.js ≥ 18
+- npm ≥ 9
+- Git
 
 ```bash
-npm run reset-project
+git clone https://github.com/Mistoruu/weather-app-native.git
+cd weather-app-native
+npm install
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## Configuration
 
-## Learn more
+Les clés API ne sont pas incluses dans le dépôt. Avant de lancer l'application, créez un fichier `.env` à la racine du projet :
 
-To learn more about developing your project with Expo, look at the following resources:
+```env
+EXPO_PUBLIC_WEATHER_API_KEY=votre_cle_openweather
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+EXPO_PUBLIC_FIREBASE_API_KEY=...
+EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN=...
+EXPO_PUBLIC_FIREBASE_PROJECT_ID=...
+EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET=...
+EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=...
+EXPO_PUBLIC_FIREBASE_APP_ID=...
+```
 
-## Join the community
+### Firebase
 
-Join our community of developers creating universal apps.
+1. Créez un projet sur la console Firebase.
+2. Ajoutez une application **Web**.
+3. Activez **Authentication** puis la méthode **Email / Mot de passe**.
+4. Copiez les informations de configuration dans votre fichier `.env`.
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+### OpenWeather
+
+1. Créez un compte sur OpenWeather.
+2. Générez une clé API.
+3. Renseignez-la dans `EXPO_PUBLIC_WEATHER_API_KEY`.
+
+Une fois ces étapes terminées, l'application pourra communiquer avec Firebase et OpenWeather.
+
+## Lancer l'application
+
+```bash
+npx expo start
+```
+
+L'application peut ensuite être lancée avec **Expo Go**, un émulateur Android ou un simulateur iOS.
+
+## Structure du projet
+
+```text
+src/
+├── contexts/
+│   └── ThemeContext.js
+├── navigation/
+│   └── AppNavigator.js
+├── screens/
+│   ├── DashboardScreen.js
+│   ├── ForgotPasswordScreen.js
+│   ├── LoginScreen.js
+│   ├── ProfileScreen.js
+│   ├── RegisterScreen.js
+│   ├── SearchScreen.js
+│   └── WeatherDetailScreen.js
+├── services/
+│   ├── database.js
+│   ├── firebaseConfig.js
+│   └── weatherApi.js
+└── utils/
+    └── validation.js
+```
+
+## Validation des formulaires
+
+Les formulaires sont validés avec **Joi** avant chaque appel à Firebase. Les schémas vérifient le format des e-mails ainsi que la complexité des mots de passe (8 caractères minimum, une majuscule, un chiffre et un caractère spécial). Les erreurs sont affichées directement afin d'éviter des requêtes inutiles.
+
+## SQL/FIREBASE
+
+L'application sépare l'authentification et les données locales :
+
+- **Firebase Authentication** gère les comptes utilisateurs et les sessions.
+- **SQLite** stocke l'historique des recherches et les villes favorites.
+
+
